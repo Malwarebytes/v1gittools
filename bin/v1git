@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'thor'
+require 'v1gittools'
+include V1gittools
+
+Dir.chdir("/home/jchan/code/sirius")
+class V1git < Thor
+  option :title, :type => :string, :banner => 'v1|git', :aliases => :t, desc: '"git" or "versionone" title, defaults to v1 title [v1,git]'
+  desc 'changelog start end', 'Generates a changelog of merged PRs with VersionOne tags'
+  def changelog(start_snapshot, end_snapshot)
+    tool = ChangeLogTool.new options
+    tool.generate_changelog(start_snapshot,end_snapshot)
+  end
+
+  desc 'develop v1_story_id [branch_name]', 'Move a v1 story into "in-progress" and start a new branch off of develop. If branch is not specified, defaults to story id name'
+  def develop(v1_story_id, branch_name = nil)
+    tool = DevelopStoryTool.new
+    tool.develop(v1_story_id,branch_name)
+  end
+
+  desc 'qa', 'Moves the current story/branch to "In-Test" and creates a PR in github'
+  def qa
+    tool = QATool.new
+    tool.qa
+  end
+end
+
+
+
+V1git.start(ARGV)

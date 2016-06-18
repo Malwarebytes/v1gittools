@@ -1,0 +1,31 @@
+v1config:
+  # The following is taken from the url of your v1 instance
+  # eg. https://www14.v1host.com/v1sdktesting/Default.aspx
+  hostname: 'www14.v1host.com'
+  instance: 'v1sdktesting'
+  
+  # we can either use username/password or access_token - access_token is preferred
+  #username: ''
+  #password: ''
+
+  # You can get the access_token by mousing over your name in the upper-right 
+  # corner of v1 and clicking "Applications". A dialog will walk you through
+  # generating an access_token.
+  access_token: ''
+
+  # probably do not need to change this.
+  type_prefixes:
+    D: 'Defect'
+    B: 'Story'
+  port: 443
+  protocol: 'https'
+v1_story_statuses:
+  # go to #{YOURHOST}/rest-1.v1/Data/StoryStatus ie. 
+  # https://www14.v1host.com/v1sdktesting/rest-1.v1/Data/StoryStatus
+  # to find the story status IDs for your v1 account.
+  # 'In Test' status probably won't be setup by default in your versionone
+  # account. You may need to have to add a column in kanban:
+  # https://community.versionone.com/Help-Center/Portfolio_Planning/Portfolio_Kanban/Working_with_Portfolio_Kanbans#Changing_Columns
+  # https://community.versionone.com/Help-Center/Setup_and_Administration/List_Type_Administration
+  develop: 'StoryStatus:134' # In Progress
+  test: 'StoryStatus:1073' # In Test
