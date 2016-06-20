@@ -35,7 +35,7 @@ Or install it yourself as:
 
 ```
 gem install specific_install
-gem specific_install https://github.com/Malwarebytes/ipaws.git master
+gem specific_install https://github.com/Malwarebytes/v1gittools.git master
 ```
 
 
