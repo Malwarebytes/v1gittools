@@ -29,3 +29,10 @@ v1_story_statuses:
   # https://community.versionone.com/Help-Center/Setup_and_Administration/List_Type_Administration
   develop: 'StoryStatus:134' # In Progress
   test: 'StoryStatus:1073' # In Test
+github:
+  # If you're using github enterprise, point this to your domain name
+  endpoint: https://api.github.com
+
+  # Auth token used to access github. Leave this as "AUTOGENERATE" to have v1git create one for you. The auth token
+  # needs to have permission to read/write code in repos
+  oauth_token: "AUTOGENERATE"

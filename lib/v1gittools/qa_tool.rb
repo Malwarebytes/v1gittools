@@ -27,11 +27,20 @@ module V1gittools
 
       v1_story = v1.getAsset(v1_story_id.dup)
 
-      puts " - Created PR for this branch (complete creating PR in browser)."
+
+      pr = @github.pull_requests.create(repo_config[:github_owner], repo_config[:github_repo],
+        {
+          title: "[#{v1_story_id}] #{v1_story.getProp(:Name)}",
+          body: "#{v1_story.getProp(:_sObjectUrl__id)}",
+          head: branch,
+          base: repo_config[:develop_branch]
+      })
+
+      puts " - Created PR for this branch (PR ##{pr.number})."
       puts " - Set 'Build' field in story to '#{branch}'."
       puts " - Set #{v1_story_id} to the status #{v1_story.getProp(:"Status.Name")}.\n\n"
 
-      Launchy.open("#{repo_config[:github_url]}/compare/#{repo_config[:develop_branch]}...#{branch}?expand=1&title=[#{v1_story_id}]%20#{URI.encode(v1_story.getProp(:Name))}&body=#{CGI.escape(v1_story.getProp(:_sObjectUrl__id))}")
+      Launchy.open(pr.html_url)
     end
   end
 end

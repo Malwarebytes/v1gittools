@@ -24,6 +24,18 @@ class V1git < Thor
     tool = QATool.new
     tool.qa
   end
+
+
+  desc 'init', 'Initializes repo settings for v1git'
+  def init
+    V1gittools::generate_repo_config V1gittools::repo_config_path
+    V1gittools::initialize_github
+
+    # write some checks here to make sure that
+    # - v1 works
+    # - git works
+    # - github works
+  end
 end
 
 
