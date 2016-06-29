@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
   end
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = 'bin'
-  spec.executables   = spec.files.grep(%r{^bin/v1git}) { |f| File.basename(f) }
+  spec.bindir        = 'exec'
+  spec.executables   = spec.files.grep(%r{^exec}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'git', '~> 1.3.0'
