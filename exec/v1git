@@ -31,10 +31,15 @@ class V1git < Thor
     V1gittools::generate_repo_config V1gittools::repo_config_path
     V1gittools::initialize_github
 
-    # write some checks here to make sure that
-    # - v1 works
-    # - git works
-    # - github works
+    puts "Running validations... (if any of these fail, run '#{$0} validate' after correcting the issue.)"
+    V1gittools::validate_config
+  end
+
+  desc 'validate', 'Validates config and connections and verifies if everything works.'
+  def validate
+    V1gittools::validate_config
+
+    puts "All validations pass! You're ready to run v1git on your project!"
   end
 end
 

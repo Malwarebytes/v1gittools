@@ -1,6 +1,3 @@
-require 'io/console'
-require 'github_api'
-
 module V1gittools
   class BaseTool
     attr_reader :v1, :git, :args, :config, :repo_config, :github

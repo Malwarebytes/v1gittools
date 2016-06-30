@@ -1,7 +1,9 @@
+require 'json'
 require 'yaml'
-require 'git'
 require 'v1gittools/deep_hash_with_indifferent_access'
 require 'socket'
+require 'faraday'
+require 'io/console'
 
 module V1gittools
   @config = nil
@@ -63,6 +65,12 @@ module V1gittools
     return if File.exists?(config_path)
     puts "NOTICE: v1git has never been used for this project before. Generating default config...\n\n"
 
+    `git status`
+    if $?.to_i == 128
+      puts "Your current working directory isn't even a git repository! Goodbye!"
+      exit
+    end
+
     # guessing github address from git remote origin url
     git_remote_url = `git config --get remote.origin.url`.strip
 
@@ -91,7 +99,7 @@ module V1gittools
     V1gittools::write_repo_config(config_path,default_config_hash)
 
     if github_url == ''
-      raise "ERROR: Couldn't guess repository github url. Please modify git_remote_url config option manually in '#{config_path}'"
+      raise "ERROR: Couldn't guess github config options. Please modify github config options manually in '#{config_path}'"
     else
       puts "Config generated with the following guessed/assumed values:\n\n"
       puts "Develop branch: #{default_config_hash[:develop_branch]}"
@@ -149,5 +157,74 @@ module V1gittools
 
       puts "Credential generated and written to #{V1gittools::default_config_file} config file."
     end
+  end
+
+  def self.validate_config
+    # write some checks here to make sure that
+    # - v1 works
+    response = Faraday.get "https://#{V1gittools::config[:v1config][:hostname]}/#{V1gittools::config[:v1config][:instance]}/Account.mvc/LogIn"
+
+    if response.status == 200
+      puts 'Validating VersionOne URL... PASSED'
+    else
+      puts 'Validating VersionOne URL... FAILED'
+      puts 'Please verify that the VersionOne (v1config block) hostname and instance is correct.'
+      exit
+    end
+
+    print 'Validating VersionOne credentials... '
+    response = VersiononeSdk::Client.new(V1gittools::config[:v1config]).getAssets('State') # run a test query
+
+    if response.empty?
+      puts 'FAILED'
+      puts 'Please validate that the VersionOne credentials is correct (you may need to regenerate a new token).'
+    else
+      puts 'PASSED'
+    end
+
+
+
+    # - git works
+    `git status`
+    if $?.to_i == 128
+      puts 'Validating git config... FAILED'
+      puts "Your current working directory isn't even a git repository! Please make sure you're in the correct directory."
+      exit
+    else
+      puts 'Validating git config... PASSED'
+    end
+
+    # - github works
+    print 'Validating github endpoint... '
+    response = Faraday.get @config[:github][:endpoint]
+    begin
+      json_response = JSON.parse(response.body)
+    rescue
+      puts 'FAILED'
+      puts 'Please verify that github[:endpoint] config option is set correctly. Could not contact github.'
+      exit
+    end
+
+    if json_response['message'] == 'Must authenticate to access this API.'
+      puts 'PASSED'
+    else
+      puts 'FAILED'
+      puts 'Please verify that github[:endpoint] config option is set correctly. Could not contact github.'
+      exit
+    end
+
+    print 'Validating github credentials...'
+    github = Github.new(Hash[V1gittools::config[:github].map{ |k, v| [k.to_sym, v] }])
+    begin
+      response = github.pull_requests.list(V1gittools::repo_config[:github_owner], V1gittools::repo_config[:github_repo])
+    rescue ArgumentError
+      puts 'FAILED'
+      puts "Please verify that github_owner and github_repo in #{V1gittools::repo_config_path} is set."
+    rescue Github::Error::Unauthorized
+      puts 'FAILED'
+      puts "Please verify that the github oauth configuration setting is set correctly in #{V1gittools::default_config_file}"
+    end
+
+    puts 'PASSED'
   end
 end

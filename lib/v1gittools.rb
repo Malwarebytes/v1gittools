@@ -5,6 +5,7 @@ require 'v1gittools/change_log_tool'
 require 'v1gittools/develop_story_tool'
 require 'v1gittools/qa_tool'
 require 'git'
+require 'github_api'
 require 'versionone_sdk'
 
 module V1gittools

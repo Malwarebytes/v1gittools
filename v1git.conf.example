@@ -31,6 +31,8 @@ v1_story_statuses:
   test: 'StoryStatus:1073' # In Test
 github:
   # If you're using github enterprise, point this to your domain name
+  # Typically, you'll need to add /api/v3 to it. Eg.
+  # https://github.mydomain.com/api/v3/
   endpoint: https://api.github.com
 
   # Auth token used to access github. Leave this as "AUTOGENERATE" to have v1git create one for you. The auth token
