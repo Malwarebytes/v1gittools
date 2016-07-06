@@ -15,7 +15,8 @@ VersionOne Git tool integrates VersionOne Story/Defect statuses with git branche
 
 ### Gem 
 
-TODO: Gem installer coming soon!
+**TODO:** Gem installer coming soon! None of this works yet!
+
 
 Add this line to your application's Gemfile:
 
@@ -33,6 +34,8 @@ Or install it yourself as:
 
 ### Without Rubygems Install
 
+**This method works!**
+
 ```
 gem install specific_install
 gem specific_install https://github.com/Malwarebytes/v1gittools.git master
@@ -43,10 +46,38 @@ gem specific_install https://github.com/Malwarebytes/v1gittools.git master
 
 Copy ```v1git.conf.example``` to ```~/.v1git.conf```. Please refer to the example file for details on each parameter that needs to be set.
 
-
 ## Usage
 
 Demonstration of workflow:
+
+### Initialize
+
+When you start a new project with v1git, run:
+
+```shell
+$ v1git init
+NOTICE: v1git has never been used for this project before. Generating default config...
+
+Config generated with the following guessed/assumed values:
+
+Develop branch: develop
+github_url: https://github.com/acme/cool_project
+
+github_owner: acme
+
+github_repo: cool_project
+
+If these values are not correct, please correct it in "~/code/cool_project/.git/v1git.conf".
+
+Running validations... (if any of these fail, run 'exec/v1git validate' after correcting the issue.)
+Validating VersionOne URL... PASSED
+Validating VersionOne credentials... PASSED
+Validating git config... PASSED
+Validating github endpoint... PASSED
+Validating github credentials...PASSED
+```
+
+If there are any issues with the setup, please correct and verify all settings are correct.
 
 ### Develop
 

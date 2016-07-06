@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'versionone_sdk', '~>0.2'
   spec.add_runtime_dependency 'thor', '~> 0.19'
   spec.add_runtime_dependency 'launchy', '~> 2.4', '>= 2.4.3'
-  spec.add_runtime_dependency 'github_api', '~> 0.13.1'
+  spec.add_runtime_dependency 'github_api', '~> 0.14.3'
 
 
   spec.add_development_dependency 'bundler', '~> 1.12'

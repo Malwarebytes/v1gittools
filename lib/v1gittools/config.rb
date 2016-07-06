@@ -10,7 +10,7 @@ module V1gittools
   def self.config
     if @config.nil?
       # load config from file
-      V1gittools::load_config_file
+      load_config_file
     end
 
     @config
@@ -33,7 +33,7 @@ module V1gittools
   @repo_config = nil
   def self.repo_config
     if @repo_config.nil?
-      V1gittools::load_repo_config
+      load_repo_config
     end
 
     @repo_config
@@ -51,7 +51,7 @@ module V1gittools
   end
 
   def self.load_repo_config
-    config_path = V1gittools::repo_config_path
+    config_path = repo_config_path
 
     unless File.exists?(config_path)
       puts "v1git has not been setup for this repository yet. Please run #{$0} init to initialize and setup v1git."
@@ -96,7 +96,7 @@ module V1gittools
         branches: {}
     }
 
-    V1gittools::write_repo_config(config_path,default_config_hash)
+    write_repo_config(config_path,default_config_hash)
 
     if github_url == ''
       raise "ERROR: Couldn't guess github config options. Please modify github config options manually in '#{config_path}'"
@@ -111,7 +111,7 @@ module V1gittools
   end
 
   def self.update_repo_config
-    V1gittools::write_repo_config(V1gittools::repo_config_path, @repo_config)
+    write_repo_config(V1gittools::repo_config_path, @repo_config)
   end
 
   def self.write_repo_config config_path, config_hash
@@ -122,11 +122,11 @@ module V1gittools
   end
 
   def self.initialize_github
-    if V1gittools::config[:github] && V1gittools::config[:github][:oauth_token] == 'AUTOGENERATE'
+    if config[:github] && config[:github][:oauth_token] == 'AUTOGENERATE'
       print 'V1git requires a github access token for creating PRs. We will be requesting github for an access token'
       puts 'using your credentials. This will only be a one time operation.'
-      if V1gittools::config[:github] && V1gittools::config[:github][:endpoint]
-        endpoint = V1gittools::config[:github][:endpoint]
+      if config[:github] && config[:github][:endpoint]
+        endpoint = config[:github][:endpoint]
         puts "\nV1Git is configured to connect to: #{endpoint}\n"
       else
         endpoint = nil
@@ -147,22 +147,22 @@ module V1gittools
 
 
       # load the file as a string
-      config_data = File.read(File.expand_path(V1gittools::default_config_file))
+      config_data = File.read(File.expand_path(default_config_file))
       # globally substitute "install" for "latest"
       filtered_data = config_data.gsub(/oauth_token: *"AUTOGENERATE"/, "oauth_token: \"#{token.token}\"")
       # open the file for writing
-      File.open(File.expand_path(V1gittools::default_config_file), "w") do |f|
+      File.open(File.expand_path(default_config_file), "w") do |f|
         f.write(filtered_data)
       end
 
-      puts "Credential generated and written to #{V1gittools::default_config_file} config file."
+      puts "Credential generated and written to #{default_config_file} config file."
     end
   end
 
   def self.validate_config
     # write some checks here to make sure that
     # - v1 works
-    response = Faraday.get "https://#{V1gittools::config[:v1config][:hostname]}/#{V1gittools::config[:v1config][:instance]}/Account.mvc/LogIn"
+    response = Faraday.get "https://#{config[:v1config][:hostname]}/#{config[:v1config][:instance]}/Account.mvc/LogIn"
 
     if response.status == 200
       puts 'Validating VersionOne URL... PASSED'
@@ -173,7 +173,7 @@ module V1gittools
     end
 
     print 'Validating VersionOne credentials... '
-    response = VersiononeSdk::Client.new(V1gittools::config[:v1config]).getAssets('State') # run a test query
+    response = VersiononeSdk::Client.new(config[:v1config]).getAssets('State') # run a test query
 
     if response.empty?
       puts 'FAILED'
@@ -214,15 +214,17 @@ module V1gittools
     end
 
     print 'Validating github credentials...'
-    github = Github.new(Hash[V1gittools::config[:github].map{ |k, v| [k.to_sym, v] }])
+    github = Github.new(Hash[config[:github].map{ |k, v| [k.to_sym, v] }])
     begin
-      response = github.pull_requests.list(V1gittools::repo_config[:github_owner], V1gittools::repo_config[:github_repo])
+      response = github.pull_requests.list(repo_config[:github_owner], repo_config[:github_repo])
     rescue ArgumentError
       puts 'FAILED'
-      puts "Please verify that github_owner and github_repo in #{V1gittools::repo_config_path} is set."
+      puts "Please verify that github_owner and github_repo in #{repo_config_path} is set."
+      exit
     rescue Github::Error::Unauthorized
       puts 'FAILED'
-      puts "Please verify that the github oauth configuration setting is set correctly in #{V1gittools::default_config_file}"
+      puts "Please verify that the github oauth configuration setting is set correctly in #{default_config_file}"
+      exit
     end
 
     puts 'PASSED'

@@ -37,4 +37,8 @@ github:
 
   # Auth token used to access github. Leave this as "AUTOGENERATE" to have v1git create one for you. The auth token
   # needs to have permission to read/write code in repos
+
+  # if you use 2FA, you will need to generate the auth_token yourself. Please follow
+  # https://help.github.com/articles/creating-an-access-token-for-command-line-use/
+  # make sure to check "repo" permissions
   oauth_token: "AUTOGENERATE"

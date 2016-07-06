@@ -27,14 +27,23 @@ module V1gittools
 
       v1_story = v1.getAsset(v1_story_id.dup)
 
+      begin
+        pr = @github.pull_requests.create(repo_config[:github_owner], repo_config[:github_repo],
+          {
+            title: "[#{v1_story_id}] #{v1_story.getProp(:Name)}",
+            body: "#{v1_story.getProp(:_sObjectUrl__id)}",
+            head: branch,
+            base: repo_config[:develop_branch]
+        })
+      rescue Github::Error::UnprocessableEntity => e
+        if e.to_s.include? 'No commits between'
+          puts "Branch '#{branch}' does not exist on github. Did you forget to `git push`? Cannot create PR!"
+          exit
+        else
+          raise e
+        end
+      end
 
-      pr = @github.pull_requests.create(repo_config[:github_owner], repo_config[:github_repo],
-        {
-          title: "[#{v1_story_id}] #{v1_story.getProp(:Name)}",
-          body: "#{v1_story.getProp(:_sObjectUrl__id)}",
-          head: branch,
-          base: repo_config[:develop_branch]
-      })
 
       puts " - Created PR for this branch (PR ##{pr.number})."
       puts " - Set 'Build' field in story to '#{branch}'."
