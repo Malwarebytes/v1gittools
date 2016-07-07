@@ -36,7 +36,8 @@ module V1gittools
             base: repo_config[:develop_branch]
         })
       rescue Github::Error::UnprocessableEntity => e
-        if e.to_s.include? 'No commits between'
+        if e.to_s.include?('No commits between') ||
+           e.to_s.include?('field: head, code: invalid')
           puts "Branch '#{branch}' does not exist on github. Did you forget to `git push`? Cannot create PR!"
           exit
         else
