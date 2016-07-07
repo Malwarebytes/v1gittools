@@ -196,7 +196,7 @@ module V1gittools
 
     # - github works
     print 'Validating github endpoint... '
-    response = Faraday.get @config[:github][:endpoint]
+    response = Faraday.get config[:github][:endpoint]
     begin
       json_response = JSON.parse(response.body)
     rescue
@@ -205,7 +205,7 @@ module V1gittools
       exit
     end
 
-    if json_response['message'] == 'Must authenticate to access this API.'
+    if json_response['message'] == 'Must authenticate to access this API.' || json_response['current_user_url'] != nil
       puts 'PASSED'
     else
       puts 'FAILED'
