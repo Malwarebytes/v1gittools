@@ -155,6 +155,8 @@ module V1gittools
         f.write(filtered_data)
       end
 
+      @config = nil # need to force reload of the config params after writing to it.
+
       puts "Credential generated and written to #{default_config_file} config file."
     end
   end
