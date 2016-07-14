@@ -223,6 +223,11 @@ module V1gittools
       puts 'FAILED'
       puts "Please verify that github_owner and github_repo in #{repo_config_path} is set."
       exit
+    rescue Github::Error::NotFound
+      puts 'FAILED'
+      puts 'Please verify that your github endpoint and credentials are correct:'
+      puts ' - Did you put github.com creds when you meant to use github enterprise creds or visa versa?'
+      exit
     rescue Github::Error::Unauthorized
       puts 'FAILED'
       puts "Please verify that the github oauth configuration setting is set correctly in #{default_config_file}"

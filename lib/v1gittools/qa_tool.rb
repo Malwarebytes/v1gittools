@@ -31,26 +31,31 @@ module V1gittools
         pr = @github.pull_requests.create(repo_config[:github_owner], repo_config[:github_repo],
           {
             title: "[#{v1_story_id}] #{v1_story.getProp(:Name)}",
-            body: "#{v1_story.getProp(:_sObjectUrl__id)}",
+            body: "https://#{config[:v1config][:hostname]}/#{config[:v1config][:instance]}/story.mvc/Summary?oidToken=#{v1_story.getProp(:_sObjectType__id)}:#{v1_story.getProp(:_iObjectId__id)}",
             head: branch,
             base: repo_config[:develop_branch]
         })
+        puts " - Created PR for this branch (PR ##{pr.number})."
       rescue Github::Error::UnprocessableEntity => e
-        if e.to_s.include?('No commits between') ||
-           e.to_s.include?('field: head, code: invalid')
+        if e.to_s.include?('No commits between')
+          puts "Cannot create Pull Request! There have been no changes between #{branch} and #{repo_config[:develop_branch]}. Did you forget to commit your code?"
+          exit
+        elsif e.to_s.include?('field: head, code: invalid')
           puts "Branch '#{branch}' does not exist on github. Did you forget to `git push`? Cannot create PR!"
           exit
+        elsif e.to_s.include?('A pull request already exists for')
+          puts " - Pull Request for branch '#{branch}' already exists. Skipped creating PR."
         else
           raise e
         end
       end
 
 
-      puts " - Created PR for this branch (PR ##{pr.number})."
-      puts " - Set 'Build' field in story to '#{branch}'."
-      puts " - Set #{v1_story_id} to the status #{v1_story.getProp(:"Status.Name")}.\n\n"
 
-      Launchy.open(pr.html_url)
+      puts " - Set 'Build' field in story to '#{branch}'."
+      puts " - Set #{v1_story_id} to the status '#{v1_story.getProp(:"Status.Name")}'.\n\n"
+
+      Launchy.open(pr.html_url) if pr
     end
   end
 end

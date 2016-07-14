@@ -5,6 +5,10 @@ require 'thor'
 require 'v1gittools'
 include V1gittools
 
+
+# for dev purposes
+Dir.chdir(ENV['v1git_cwd']) if ENV['v1git_cwd']
+
 class V1git < Thor
   option :title, :type => :string, :banner => 'v1|git', :aliases => :t, desc: '"git" or "versionone" title, defaults to v1 title [v1,git]'
   desc 'changelog start end', 'Generates a changelog of merged PRs with VersionOne tags'
