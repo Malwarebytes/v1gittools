@@ -28,7 +28,7 @@ module V1gittools
               puts "WARNING: Cannot Find Story [#{story_id}] in V1!"
             else
               v1_title = v1_story.getProp('Name')
-              v1_url = v1_story.getProp(:_sObjectUrl__id)
+              v1_url = "https://#{config[:v1config][:hostname]}/#{config[:v1config][:instance]}/story.mvc/Summary?oidToken=#{v1_story.getProp(:_sObjectType__id)}:#{v1_story.getProp(:_iObjectId__id)}"
             end
 
             if @args[:title] == 'git'
