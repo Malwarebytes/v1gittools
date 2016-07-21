@@ -1,6 +1,9 @@
 # V1GitTools
 
 VersionOne Git tool integrates VersionOne Story/Defect statuses with git branches and github PRs. The result encourages developers to only make code changes based off of stories and defects promoting better tracking for projects. v1git is roughly based off of git flow, though it should be flexible enough to be used in other workflows.
+### Screencast Tutorial
+* [Setting up VersionOne Project for V1GitTools](https://malwarebytes.box.com/shared/static/m67wyc7tgctgz2pfdzdl9z20kwl3oudw.mov)
+* [V1GitTools Demo & How To Setup](https://malwarebytes.box.com/shared/static/v2arkjgut0e7e3rt04p1mfmkj89p2cqc.mov)
 
 ## VersionOne Prerequisites
 
@@ -13,28 +16,12 @@ VersionOne Git tool integrates VersionOne Story/Defect statuses with git branche
 
 ## Installation
 
-### Gem 
-
-**TODO:** Gem installer coming soon! None of this works yet!
-
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'v1gittools'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+### Installing it via Rubygems 
 
     $ gem install v1gittools
 
-### Without Rubygems Install
+### Or Without Rubygems Install
 
-**This method works!**
 
 ```
 gem install specific_install
