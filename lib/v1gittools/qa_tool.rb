@@ -37,7 +37,8 @@ module V1gittools
         })
         puts " - Created PR for this branch (PR ##{pr.number})."
       rescue Github::Error::UnprocessableEntity => e
-        if e.to_s.include?('No commits between')
+        ## TODO: Need to change all these errors to use error_messages instead of trying to analyze it manually.
+        if e.error_messages.include?({:resource=>"PullRequest", :code=>"custom", :message=>"No commits between develop and add_truth_statements"})
           puts "Cannot create Pull Request! There have been no changes between #{branch} and #{repo_config[:develop_branch]}. Did you forget to commit your code?"
           exit
         elsif e.to_s.include?('field: head, code: invalid')
