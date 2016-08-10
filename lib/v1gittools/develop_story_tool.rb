@@ -10,7 +10,7 @@ module V1gittools
       end
 
       git.checkout(repo_config[:develop_branch])
-      git.pull
+      git.pull(repo_config[:github_remote], repo_config[:develop_branch])
       git.branch(branch_name).checkout
 
       repo_config[:branches][branch_name] = v1_story_id
