@@ -93,6 +93,7 @@ module V1gittools
         github_owner: github_owner,
         github_repo: github_repo,
         develop_branch: 'develop',
+        github_remote: 'origin',
         branches: {}
     }
 
@@ -104,6 +105,7 @@ module V1gittools
       puts "Config generated with the following guessed/assumed values:\n\n"
       puts "Develop branch: #{default_config_hash[:develop_branch]}"
       puts "github_url: #{github_url}\n\n"
+      puts "github_remote: #{default_config_hash[:github_remote]}\n\n"
       puts "github_owner: #{github_owner}\n\n"
       puts "github_repo: #{github_repo}\n\n"
       puts "If these values are not correct, please correct it in \"#{config_path}\".\n\n"
