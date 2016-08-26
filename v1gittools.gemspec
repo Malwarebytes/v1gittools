@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jonathan Chan']
   spec.email         = ['jchan@malwarebytes.org']
 
-  spec.summary       = %q{Random V1 Tools}
-  spec.description   = %q{1st Tool, v1 -> git changelog creator}
+  spec.summary       = %q{VersionOne/Git/Github Integration tools}
+  spec.description   = %q{Tool(s) to integrate the VersionOne project managemente system with git/github developer workflow.}
   spec.homepage      = 'http://malwarebytes.org'
   spec.license       = 'MIT'
 
