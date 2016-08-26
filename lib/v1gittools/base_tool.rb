@@ -9,7 +9,8 @@ module V1gittools
       @config = V1gittools::config
       check_proper_init
       @repo_config = V1gittools::repo_config
-      @git = Git.open(Dir.pwd)
+      git_root_path = `git rev-parse --show-toplevel`.strip
+      @git = Git.open(git_root_path)
       @v1 = VersiononeSdk::Client.new(@config[:v1config])
       @github = Github.new(Hash[@config[:github].map{ |k, v| [k.to_sym, v] }])
     end
